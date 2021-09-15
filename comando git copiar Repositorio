@@ -1,1 +1,4 @@
 git clone https://github.com/jhonatanRiosC/ProyectoCiclo3.git
+change branch
+git branch "name branch"
+git branch -m "new name"
