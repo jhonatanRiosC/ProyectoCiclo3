@@ -8,3 +8,5 @@ crítico, tener una comunicación asertiva con mis compañeros de trabajo, elabo
 El rol que desempeño en Developensantes es el de Product Owner, donde soy la encargada del proyecto, entiendo las necesidades de la empresa manufacturera
 y los requisitos que necesita el cliente para transformar las ideas de los clientes en productos tangibles. Soy la responsable de la realización del Product 
 Backlog, el desarrollo del producto y la medición de los resultados.
+
+Sprint 2 creación de módulo de usuarios
