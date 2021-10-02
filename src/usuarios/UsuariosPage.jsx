@@ -1,38 +1,48 @@
+// Laura posada  - Creado el 1 Oct 2021
 import React, { Fragment, useState, useEffect } from 'react';
 import './UsuariosStyles.css';
+//import NavbarComponent from '../shared/components/navbar/NavbarComponent';
 
 let users_db =[
     {
         '_id': '1',
-        'name': 'John Doe',
-        'email': 'john@doe.com',
+        'name': 'Jarol Andres Castaño',
+        'email': 'jaancastano@utp.edu.co',
         'password': '12345',
-        'role': 'admin',
-        'status': 'active'
+        'role': 'Vendedor',
+        'status': 'Autorizado'
     },
     {
         '_id': '2',
-        'name': 'Jane Doe',
-        'email': 'jane@doe.com',
+        'name': 'Diana Dorado',
+        'email': 'dianadorado25081994@gmail.com',
         'password': '12345',
-        'role': 'admin',
-        'status': 'active'
+        'role': 'Vendedor',
+        'status': 'Pendiente'
     },
     {
         '_id': '3',
-        'name': 'Homero Simpson',
-        'email': 'elhomo@simpson.com',
+        'name': 'Alejandro Lopez',
+        'email': 'alopezpe1@gmail.com',
         'password': '12345',
-        'role': 'vendedor',
-        'status': 'active'
+        'role': 'Vendedor',
+        'status': 'Autorizado'
     },
     {
         '_id': '4',
-        'name': 'Bart Simpson',
-        'email': 'elbarto@simpson.com',
+        'name': 'Laura Posada',
+        'email': 'posadalaura57@gmail.com',
         'password': '12345',
-        'role': 'vendedor',
-        'status': 'inactive'
+        'role': 'Administrador',
+        'status': 'Autorizado'
+    },
+    {
+        '_id': '5',
+        'name': 'Jhonatan Ríos',
+        'email': 'jhonatanplac98@outlook.com',
+        'password': '12345',
+        'role': 'Vendedor',
+        'status': 'No autorizado'
     }
 ]
 
@@ -54,6 +64,7 @@ function UsuariosPage() {
     
     return (
         <Fragment>
+            {/* <NavbarComponent /> */}
             <h1>USUARIOS DEL SISTEMA</h1><br />
             <table className="table">
                 <thead>

@@ -10,7 +10,7 @@ function NavbarComponent(props) {
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container-fluid">
                 <a className="navbar-brand" href="#">{title}</a>
-                <img src={logo} alt="" width="125" height="100"/>
+                <img src={logo} alt="" width="125" height="82,18"/>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                 </button>
@@ -26,5 +26,6 @@ function NavbarComponent(props) {
         </nav>
     )
 }
+
 
 export default NavbarComponent;
