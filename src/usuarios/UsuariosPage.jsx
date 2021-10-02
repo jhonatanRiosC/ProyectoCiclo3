@@ -74,6 +74,7 @@ function UsuariosPage() {
                         <th scope="col">Correo</th>
                         <th scope="col">Rol</th>
                         <th scope="col">Estado</th>
+                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -87,27 +88,11 @@ function UsuariosPage() {
                             <td>{ item.email }</td>
                             <td>{ item.role }</td>
                             <td>{ item.status }</td>
+                            <td>Editar</td>
                             </tr>
                         );
                     })
                 }
-                    {/* <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td colspan="2">Larry the Bird</td>
-                        <td>@twitter</td>
-                    </tr> */}
                 </tbody>
             </table>
 
