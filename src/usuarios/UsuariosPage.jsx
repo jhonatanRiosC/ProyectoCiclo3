@@ -1,60 +1,58 @@
 // Laura posada  - Creado el 1 Oct 2021
 import React, { Fragment, useState, useEffect } from 'react';
-import './UsuariosStyles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
 //import NavbarComponent from '../shared/components/navbar/NavbarComponent';
 
-let users_db = [
-    {
-        '_id': '1',
-        'name': 'Jarol Andres Castaño',
-        'email': 'jaancastano@utp.edu.co',
-        'password': '12345',
-        'role': 'Vendedor',
-        'status': 'Autorizado'
-    },
-    {
-        '_id': '2',
-        'name': 'Diana Dorado',
-        'email': 'dianadorado25081994@gmail.com',
-        'password': '12345',
-        'role': 'Vendedor',
-        'status': 'Pendiente'
-    },
-    {
-        '_id': '3',
-        'name': 'Alejandro Lopez',
-        'email': 'alopezpe1@gmail.com',
-        'password': '12345',
-        'role': 'Vendedor',
-        'status': 'Autorizado'
-    },
-    {
-        '_id': '4',
-        'name': 'Laura Posada',
-        'email': 'posadalaura57@gmail.com',
-        'password': '12345',
-        'role': 'Administrador',
-        'status': 'Autorizado'
-    },
-    {
-        '_id': '5',
-        'name': 'Jhonatan Ríos',
-        'email': 'jhonatanplac98@outlook.com',
-        'password': '12345',
-        'role': 'Vendedor',
-        'status': 'No autorizado'
-    }
-]
-
-
 function UsuariosPage() {
+
+    let users_db = [
+        {
+            _id: '1',
+            name: 'Jarol Andres Castaño',
+            email: 'jaancastano@utp.edu.co',
+            password: '12345',
+            role: 'Vendedor',
+            status: 'Autorizado'
+        },
+        {
+            _id: '2',
+            name: 'Diana Dorado',
+            email: 'dianadorado25081994@gmail.com',
+            password: '12345',
+            role: 'Vendedor',
+            status: 'Pendiente'
+        },
+        {
+            _id: '3',
+            name: 'Alejandro Lopez',
+            email: 'alopezpe1@gmail.com',
+            password: '12345',
+            role: 'Vendedor',
+            status: 'Autorizado'
+        },
+        {
+            _id: '4',
+            name: 'Laura Posada',
+            email: 'posadalaura57@gmail.com',
+            password: '12345',
+            role: 'Administrador',
+            status: 'Autorizado'
+        },
+        {
+            _id: '5',
+            name: 'Jhonatan Ríos',
+            email: 'jhonatanplac98@outlook.com',
+            password: '12345',
+            role: 'Vendedor',
+            status: 'No autorizado'
+        }
+    ]
 
     const [users, setUsers] = useState([]);
     const [modalEditar, setModalEditar] = useState(false);
     const [modalEliminar, setModalEliminar] = useState(false);
-    const [modalInsertar, setModalInsertar] = useState(false);
+    
 
     const get_users = () => {
         // Se obtiene los datos de la API
@@ -63,7 +61,7 @@ function UsuariosPage() {
 
     useEffect(() => {
         get_users()
-    }, [users])
+    }, [])
 
     const [usuarioSeleccionado, setUsuarioSeleccionado] = useState({
         _id: '',
@@ -73,13 +71,14 @@ function UsuariosPage() {
         status: ''
     });
 
-    const seleccionarUsuario = (elemento, caso) => {
-        setUsuarioSeleccionado(elemento);
+    const seleccionarUsuario = (item, caso) => {
+        setUsuarioSeleccionado(item);
         (caso === 'Editar') ? setModalEditar(true) : setModalEliminar(true)
     }
 
     const handleChange = e => {
         const { name, value } = e.target;
+        //console.log(name, value)
         setUsuarioSeleccionado((prevState) => ({
             ...prevState,
             [name]: value
@@ -101,16 +100,11 @@ function UsuariosPage() {
     }
 
     const eliminar =()=>{
-        console.log("eliminando")
-        //let usuariosNoEliminados = [];
-/*         for(let i=0; i<users.length ; i++){
-            if (users[i] !== usuarioSeleccionado){
-                usuariosNoEliminados.push(users[i]);
-            }
-        } */
-        setUsers(users.filter(usuario=>usuario._id!==usuarioSeleccionado._id));
-        //setUsers(usuariosNoEliminados)
-        console.log(usuarioSeleccionado)
+        setUsers(
+            users.filter(
+                usuario=>usuario._id!==usuarioSeleccionado._id
+            )
+        );
         setModalEliminar(false);
 
       }
@@ -118,7 +112,7 @@ function UsuariosPage() {
     return (
         <Fragment>
             {/* <NavbarComponent /> */}
-            <h1 class="text-center font-weight-bold">USUARIOS DEL SISTEMA</h1><br />
+            <h1 className="text-center font-weight-bold" >USUARIOS DEL SISTEMA</h1><br />
             <table className="table">
                 <thead>
                     <tr>
@@ -127,14 +121,13 @@ function UsuariosPage() {
                         <th scope="col">Correo</th>
                         <th scope="col">Rol</th>
                         <th scope="col">Estado</th>
-                        <th scope="col"></th>
+                        <th scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
 
                     {
-                        users.map(item => {
-                            return (
+                        users.map(item => (
                                 <tr key={item._id}>
                                     <td>{item._id}</td>
                                     <td>{item.name}</td>
@@ -144,8 +137,7 @@ function UsuariosPage() {
                                     <td><button className="btn btn-primary" onClick={() => seleccionarUsuario(item, 'Editar')}>Editar</button> {"   "}
                                         <button className="btn btn-danger" onClick={() => seleccionarUsuario(item, 'Eliminar')}>Eliminar</button></td>
                                 </tr>
-                            );
-                        })
+                        ))
                     }
                 </tbody>
             </table>
@@ -244,7 +236,7 @@ function UsuariosPage() {
 
 
         </Fragment>
-    )
+    );
 }
 
 export default UsuariosPage;
