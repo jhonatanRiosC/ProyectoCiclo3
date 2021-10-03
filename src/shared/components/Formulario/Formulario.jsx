@@ -27,17 +27,17 @@ const Formulario = () => {
 
     return (
         <Fragment >
-            <h1 mt-5>Registro Ventas</h1>
+            <h1 className="text-center display-1 text-primary">Registro Ventas</h1>
             <div className="container">
                 <form className="row" id="row" onSubmit={enviarDatos} classname="form-floating-mb-3">
                     <div className="col-md-3">
-                        <input placeholder="Id producto" className="form-control" type="text" name="idproducto" onChange={handleInputChange}
+                        <input placeholder="Id Venta" className="form-control" type="text" name="idventa" onChange={handleInputChange}
 
 
                         />
                     </div>
                     <div className="col-md-3">
-                        <input placeholder="Cantidad" className="form-control" type="number" name="Cantidad" onChange={handleInputChange}
+                        <input placeholder="Id Producto" className="form-control" type="text" name="idproducto" onChange={handleInputChange}
 
 
                         />
@@ -49,55 +49,79 @@ const Formulario = () => {
                         />
 
                     </div>
-                    
-
-
                     <div className="col-md-3">
-                        <button className="btn btn-primary" type="submit">Enviar</button>
+                        <input placeholder="Cantidad" className="form-control" type="number" name="Cantidad" onChange={handleInputChange}
+
+
+                        />
+
                     </div>
 
 
                 </form>
+                <hr/>
+                <form className="row" onSubmit={enviarDatos} classname="form-floating-mb-3">
+                    <div className="col-md-3">
+                        <input placeholder="Valor Unitario" className="form-control" type="number" name="Vunitario" onChange={handleInputChange}
 
-            </div>
-            <div className="container">
-                <div classname="input-group mb-3">
-                    <div classname="input-group-prepend">
-                        <span classname="input-group-text" id="basic-addon1">Informacion personal</span>
+
+                        />
                     </div>
-                    <input type="text" classname="form-control" placeholder="Nombre Cliente"  />
-                </div>
+                    <div className="col-md-3">
+                        <input placeholder="Valor total" className="form-control" type="number" name="Vtotal" onChange={handleInputChange}
 
-                <div classname="input-group mb-3">
-                    <input type="text" classname="form-control" placeholder="Fecha Venta" aria-label="Recipient's username" aria-describedby="basic-addon2" />
+
+                        />
+                    </div>
+                    <div className="col-md-3">
+                        <input placeholder="Fecha Venta" className="form-control" type="date" name="Fventa" onChange={handleInputChange}
+
+
+                        />
+
+                    </div>
+                    <div className="col-md-3">
+                        <input placeholder="Nombre cliente" className="form-control" type="text" name="Ncliente" onChange={handleInputChange}
+
+
+                        />
+
+                    </div>
                     
-                </div>
 
+
+                    
+
+
+                </form>
+                <hr/>
+                <form className="row" id="row" onSubmit={enviarDatos} classname="form-floating-mb-3">
+                    <div className="col-md-3">
+                        <input placeholder="Vendedor" className="form-control" type="text" name="vendedor" onChange={handleInputChange}
+
+
+                        />
+                    
+
+                        
+
+                    </div>
+                    
+
+                    <div className="col-md-3">
+                        <button className="btn btn-primary" type="submit">Enviar</button>
+                    </div>
+                    
+
+
+                    
+
+
+                </form>
                 
-                <div classname="input-group mb-3">
-                    <div classname="input-group-prepend">
-                        <span classname="input-group-text" id="basic-addon3">Valor Unitario</span>
-                    </div>
-                    <input type="text" classname="form-control" id="basic-url" aria-describedby="basic-addon3" />
-                </div>
 
-                <div classname="input-group mb-3">
-                    <div classname="input-group-prepend">
-                        <span classname="input-group-text">Total$</span>
-                    </div>
-                    <input type="text" classname="form-control"  />
-                    <div classname="input-group-append">
-                        <span classname="input-group-text">Descripcion</span>
-                    </div>
-                </div>
-
-                <div classname="input-group">
-                    <div classname="input-group-prepend">
-                        <span classname="input-group-text">("Si hubo problemas con el producto...")</span>
-                    </div>
-                    <textarea classname="form-control" aria-label="With textarea"></textarea>
-                </div>
             </div>
+            
 
 
 
