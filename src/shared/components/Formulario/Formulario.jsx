@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from "react";
+import formularioStyle from "./formularioStyle.css"
 
 const Formulario = () => {
     const [datos, setDatos] = useState({
@@ -26,9 +27,9 @@ const Formulario = () => {
 
 
     return (
-        <Fragment >
+        <Fragment>
             <h1 className="text-center display-1 text-primary">Registro Ventas</h1>
-            <div className="container">
+            <div className="container " >
                 <form className="row" id="row" onSubmit={enviarDatos} classname="form-floating-mb-3">
                     <div className="col-md-3">
                         <input placeholder="Id Venta" className="form-control" type="text" name="idventa" onChange={handleInputChange}
@@ -104,6 +105,14 @@ const Formulario = () => {
                     
 
                         
+
+                    </div>
+                    <div className="col-md-3">
+                        <input placeholder="Correo" className="form-control" type="email" name="Correo" onChange={handleInputChange} 
+
+
+                        />
+   
 
                     </div>
                     

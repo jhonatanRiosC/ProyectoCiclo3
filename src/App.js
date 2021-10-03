@@ -6,6 +6,7 @@ import UsuariosPage from './usuarios/UsuariosPage.jsx';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import NavbarComponent from './shared/components/navbar/NavbarComponent';
 import Formulario from './shared/components/Formulario/Formulario.jsx';
+import Formulario2 from './shared/components/Formulario/Formulario2.jsx';
 
 
 
@@ -26,8 +27,11 @@ function App() {
         <Route path="/usuarios" exact>
           <UsuariosPage />
         </Route>
-        <Route path="/Formulario" exact>
+        <Route path="/formulario" exact>
           <Formulario />
+        </Route>
+        <Route path="/formulario2" exact>
+          <Formulario2 />
         </Route>
       </Switch>
     </Router>
