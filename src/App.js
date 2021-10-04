@@ -10,6 +10,7 @@ import Formulario2 from './shared/components/Formulario/Formulario2.jsx';
 
 
 
+
 function App() {
   return (
     <Router>
@@ -33,6 +34,7 @@ function App() {
         <Route path="/formulario2" exact>
           <Formulario2 />
         </Route>
+        
       </Switch>
     </Router>
   );

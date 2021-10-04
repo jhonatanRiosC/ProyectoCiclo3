@@ -20,8 +20,6 @@ function NavbarComponent(props) {
                         <Link to="/ventas" className="nav-link">Ventas</Link>
                         <Link to="/productos" className="nav-link">Productos</Link>
                         <Link to="/usuarios" className="nav-link">Usuarios</Link>
-                        
-                        
                     </div>
                 </div>
             </div>
