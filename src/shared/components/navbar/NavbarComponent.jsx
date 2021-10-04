@@ -7,7 +7,7 @@ function NavbarComponent(props) {
     let title = props.title;
 
     return (
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <nav className="navbar navbar-expand-lg navbar-light mb-3" style={{backgroundColor: "#EFC3A4"}}>
             <div className="container-fluid">
                 <a className="navbar-brand" href="#">{title}</a>
                 <img src={logo} alt="" width="125" height="82,18"/>
