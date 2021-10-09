@@ -40,6 +40,7 @@ function VentasPage() {
     const [sales, setSales] = useState([]);
     const [modalEditar, setModalEditar] = useState(false);
     const [modalEliminar, setModalEliminar] = useState(false);
+    const [busqueda, setBusqueda] = useState("");
 
     const get_sales = () => {
          // Se obtiene los datos de la API
@@ -51,6 +52,23 @@ function VentasPage() {
     }, []
     
     )
+
+    const handleChange = e => {
+        setBusqueda(e.target.value);
+        filtrar(e.target.value);
+    }
+
+    const filtrar = (terminoBusqueda) => {
+        let resultadosBusqueda = sales.filter((sale) => {
+            if (sale.id_sale.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
+                || sale.id_client.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
+                || sale.name_client.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
+            ) {
+                return sale;
+            }
+        });
+        setSales(resultadosBusqueda);
+    }
 
     const [SaleSeleccionado, setSaleSeleccionado] = useState({
         id_sale: '',
@@ -71,7 +89,7 @@ function VentasPage() {
         (caso === 'Editar') ? setModalEditar(true) : setModalEliminar(true)
     }
 
-    const handleChange = e => {
+    const bChange = e => {
         const { name, value } = e.target;
         //console.log(name, value)
         setSaleSeleccionado((prevState) => ({
@@ -108,17 +126,22 @@ function VentasPage() {
         setModalEliminar(false);
 
       }
-          
-        
-        
-    
 
-    
-    
     return (
         <Fragment>
             {/* <NavbarComponent /> */}
             <h1>GESTIÓN DE VENTAS</h1><br />
+
+            <div className="containerInput">
+                <input
+                    className="form-control inputBuscar"
+                    value={busqueda}
+                    placeholder="Búsqueda por Identificación de venta, cliente o nombre del cliente"
+                    onChange={handleChange} />
+                <button className="btn btn-success">Buscar
+                </button>
+            </div>
+
             <table className="table">
                 <thead>
                     <tr>
@@ -182,7 +205,7 @@ function VentasPage() {
                             type="number"
                             name="total_value"
                             value={SaleSeleccionado && SaleSeleccionado.total_value}
-                            onChange={handleChange}
+                            onChange={bChange}
                         />
                         <br />
 
@@ -192,7 +215,7 @@ function VentasPage() {
                             type="text"
                             name="id_product"
                             value={SaleSeleccionado && SaleSeleccionado.id_product}
-                            onChange={handleChange}
+                            onChange={bChange}
                         />
                         <br />
                         <br />
@@ -203,7 +226,7 @@ function VentasPage() {
                             type="text"
                             name="amount"
                             value={SaleSeleccionado && SaleSeleccionado.amount}
-                            onChange={handleChange}
+                            onChange={bChange}
                         />
                         <br />
                         <br />
@@ -214,7 +237,7 @@ function VentasPage() {
                             type="number"
                             name="unit_price"
                             value={SaleSeleccionado && SaleSeleccionado.unit_price}
-                            onChange={handleChange}
+                            onChange={bChange}
                         />
                         <br />
                         <br />
@@ -225,7 +248,7 @@ function VentasPage() {
                             type="date"
                             name="date"
                             value={SaleSeleccionado && SaleSeleccionado.date}
-                            onChange={handleChange}
+                            onChange={bChange}
                         />
                         <br />
                         <br />
@@ -236,7 +259,7 @@ function VentasPage() {
                             type="text"
                             name="id_client"
                             value={SaleSeleccionado && SaleSeleccionado.id_client}
-                            onChange={handleChange}
+                            onChange={bChange}
                         />
                         <br />
                         <br />
@@ -247,7 +270,7 @@ function VentasPage() {
                             type="text"
                             name="name_client"
                             value={SaleSeleccionado && SaleSeleccionado.name_client}
-                            onChange={handleChange}
+                            onChange={bChange}
                         />
                         <br />
                         <br />
@@ -258,7 +281,7 @@ function VentasPage() {
                             type="text"
                             name="seller"
                             value={SaleSeleccionado && SaleSeleccionado.seller}
-                            onChange={handleChange}
+                            onChange={bChange}
                         />
                         <br />
 
@@ -279,7 +302,7 @@ function VentasPage() {
 
             <Modal isOpen={modalEliminar}>
                 <ModalBody>
-                    Estás seguro que deseas eliminar la venta {SaleSeleccionado && SaleSeleccionado.name}
+                    Estás seguro que deseas eliminar la venta {SaleSeleccionado && SaleSeleccionado.name_client}
                 </ModalBody>
                 <ModalFooter>
                     <button className="btn btn-danger" onClick={() => eliminar()}>

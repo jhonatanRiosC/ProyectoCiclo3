@@ -1,29 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import './LoginStyles.css';
 
-const users =[
-    {
-        '_id': '1',
-        'name': 'John Doe',
-        'email': 'john@doe.com',
-        'password': '12345',
-        'role': 'admin'
-    },
-    {
-        '_id': '2',
-        'name': 'Jane Doe',
-        'email': 'jane@doe.com',
-        'password': '12345',
-        'role': 'admin'
-    },
-    {
-        '_id': '3',
-        'name': 'Homero Simpson',
-        'email': 'elhomo@simpson.com',
-        'password': '12345',
-        'role': 'vendedor'
-    },
-]
+
 
 function LoginPage() {
 

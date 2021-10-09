@@ -9,7 +9,7 @@ import { Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
 
 function ProductosPage() {
 
-    let products_db =[
+    let products_db = [
         {
             id_product: '108',
             description: 'Capuchino',
@@ -27,15 +27,32 @@ function ProductosPage() {
     const [products, setProducts] = useState([]);
     const [modalEditar, setModalEditar] = useState(false);
     const [modalEliminar, setModalEliminar] = useState(false);
+    const [busqueda, setBusqueda] = useState("");
 
     const get_products = () => {
-         // Se obtiene los datos de la API
-         setProducts(products_db)
+        // Se obtiene los datos de la API
+        setProducts(products_db)
     }
 
     useEffect(() => {
         get_products()
     }, [])
+
+    const handleChange = e => {
+        setBusqueda(e.target.value);
+        filtrar(e.target.value);
+    }
+
+    const filtrar = (terminoBusqueda) => {
+        let resultadosBusqueda = products.filter((producto) => {
+            if (producto.id_product.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
+                || producto.description.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
+            ) {
+                return producto;
+            }
+        });
+        setProducts(resultadosBusqueda);
+    }
 
     const [ProductoSeleccionado, setProductoSeleccionado] = useState({
         id_product: '',
@@ -49,7 +66,7 @@ function ProductosPage() {
         (caso === 'Editar') ? setModalEditar(true) : setModalEliminar(true)
     }
 
-    const handleChange = e => {
+    const bChange = e => {
         const { name, value } = e.target;
         //console.log(name, value)
         setProductoSeleccionado((prevState) => ({
@@ -71,20 +88,31 @@ function ProductosPage() {
         setModalEditar(false);
     }
 
-    const eliminar =()=>{
+    const eliminar = () => {
         setProducts(
             products.filter(
-                producto=>producto.id_product!==ProductoSeleccionado.id_product
+                producto => producto.id_product !== ProductoSeleccionado.id_product
             )
         );
         setModalEliminar(false);
 
-      }
+    }
 
     return (
         <Fragment>
             {/* <NavbarComponent /> */}
             <h1>PRODUCTOS REGISTRADOS</h1><br />
+
+            <div className="containerInput">
+                <input
+                    className="form-control inputBuscar"
+                    value={busqueda}
+                    placeholder="Búsqueda por Identificación o Descripción"
+                    onChange={handleChange} />
+                <button className="btn btn-success">Buscar
+                </button>
+            </div>
+
             <table className="table">
                 <thead>
                     <tr>
@@ -97,28 +125,28 @@ function ProductosPage() {
                 </thead>
                 <tbody>
 
-                {
-                    products.map(item => {
-                        return (
-                            <tr key={item.id_product}>
-                            <td>{ item.id_product }</td>
-                            <td>{ item.description }</td>
-                            <td>{ item.unit_price }</td>
-                            <td>{ item.status }</td>
-                            <td><button className="btn btn-primary" onClick={() => seleccionarProducto(item, 'Editar')}>Editar</button> {"   "}
+                    {
+                        products.map(item => {
+                            return (
+                                <tr key={item.id_product}>
+                                    <td>{item.id_product}</td>
+                                    <td>{item.description}</td>
+                                    <td>{item.unit_price}</td>
+                                    <td>{item.status}</td>
+                                    <td><button className="btn btn-primary" onClick={() => seleccionarProducto(item, 'Editar')}>Editar</button> {"   "}
                                         <button className="btn btn-danger" onClick={() => seleccionarProducto(item, 'Eliminar')}>Eliminar</button></td>
-                            </tr>
-                        );
-                    })
-                }
+                                </tr>
+                            );
+                        })
+                    }
                 </tbody>
-                
-               
+
+
             </table>
             <Modal isOpen={modalEditar}>
                 <ModalHeader>
                     <div>
-                        <h3>Editar Usuario</h3>
+                        <h3>Editar Producto</h3>
                     </div>
                 </ModalHeader>
                 <ModalBody>
@@ -139,7 +167,7 @@ function ProductosPage() {
                             type="text"
                             name="description"
                             value={ProductoSeleccionado && ProductoSeleccionado.description}
-                            onChange={handleChange}
+                            onChange={bChange}
                         />
                         <br />
 
@@ -149,7 +177,7 @@ function ProductosPage() {
                             type="number"
                             name="unit_price"
                             value={ProductoSeleccionado && ProductoSeleccionado.unit_price}
-                            onChange={handleChange}
+                            onChange={bChange}
                         />
                         <br />
                         <br />
@@ -160,7 +188,7 @@ function ProductosPage() {
                             type="text"
                             name="status"
                             value={ProductoSeleccionado && ProductoSeleccionado.status}
-                            onChange={handleChange}
+                            onChange={bChange}
                         />
                         <br />
                     </div>
@@ -198,10 +226,10 @@ function ProductosPage() {
 
             <div>
                 <Link to="/formulario2">
-                <button className="btn btn-warning" type="button">Ingresar</button>
+                    <button className="btn btn-warning" type="button">Ingresar</button>
                 </Link>
             </div>
-            
+
 
         </Fragment>
     )
