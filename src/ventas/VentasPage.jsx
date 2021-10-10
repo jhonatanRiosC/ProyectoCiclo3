@@ -12,62 +12,56 @@ import { Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
 
 function VentasPage() {
 
-    let sales_db =[
-        {
-            'id_sale': '001',
-            'total_value': 10000,
-            'id_product': '100',
-            'amount': 2,
-            'unit_price': 5000,
-            'date': '01-10-21',
-            'id_client': '12345',
-            'name_client': 'Sara Giraldo',
-            'seller': 'Jhonatan Ríos'
-        },
-        {
-            'id_sale': '002',
-            'total_value': 4000,
-            'id_product': '111',
-            'amount': 5,
-            'unit_price': 800,
-            'date': '01-10-21',
-            'id_client': '12789',
-            'name_client': 'Carolina Peña',
-            'seller': 'Diana Dorado'
-        }
-    ]
+    let sales_db =[]
 
+    
+    const [products, setProducts] = useState([]);
+    const [users, setUsers] = useState([]);
     const [sales, setSales] = useState([]);
     const [modalEditar, setModalEditar] = useState(false);
     const [modalEliminar, setModalEliminar] = useState(false);
     const [busqueda, setBusqueda] = useState("");
 
     const get_sales = () => {
-         // Se obtiene los datos de la API
-         setSales(sales_db)
+           // Se obtiene los datos de la API 
+        fetch("http://localhost:5000/api/sales")
+        .then(res => res.json())
+        .then(data => {
+            sales_db = data
+            setSales(sales_db);
+        });
     }
 
     useEffect(() => {
-        get_sales()
-    }, []
+        getProducts();
+        getUsers();
+        get_sales();
+    }, [])
+
     
-    )
+    const getProducts = () => {
+        // Se obtiene los datos de la API 
+        fetch("http://localhost:5000/api/products")
+        .then(res => res.json())
+        .then(data => {
+            let products_db = data
+            setProducts(products_db);
+        });
+    }  
+
+    const getUsers = () => {
+        // Se obtiene los datos de la API 
+        fetch("http://localhost:5000/api/users")
+        .then(res => res.json())
+        .then(data => {
+            let users = data.filter(u => u.role == "Vendedor")
+            setUsers(users);
+        });
+    }  
+
 
     const handleChange = e => {
-        setBusqueda(e.target.value);
-        filtrar(e.target.value);
-    }
-
-    const filtrar = (terminoBusqueda) => {
-        let resultadosBusqueda = sales.filter((sale) => {
-            if (sale.id_sale.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
-                || sale.id_client.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
-                || sale.name_client.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
-            ) {
-                return sale;
-            }
-        });
-        setSales(resultadosBusqueda);
+        setBusqueda(e.target.value);        
     }
 
     const [SaleSeleccionado, setSaleSeleccionado] = useState({
@@ -79,7 +73,7 @@ function VentasPage() {
         date: '',
         id_client: '',
         name_client: '',
-        seller: ''
+        id_seller: ''
 
 
     });
@@ -99,30 +93,39 @@ function VentasPage() {
     }
 
     const editar = () => {
-        let userNueva = sales;
-        userNueva.map(sale => {
-            if (sale.id_sale=== SaleSeleccionado.id_sale) {
-                sale.total_value = SaleSeleccionado.total_value;
-                sale.id_product = SaleSeleccionado.id_product;
-                sale.amount = SaleSeleccionado.amount;
-                sale.unit_price = SaleSeleccionado.unit_price;
-                sale.status = SaleSeleccionado.status;
-                sale.date = SaleSeleccionado.date;
-                sale.id_client = SaleSeleccionado.id_cliente;
-                sale.name_cliente = SaleSeleccionado.name_client;
-                sale.seller = SaleSeleccionado.seller;
-            }
-        });
-        setSales(userNueva);
-        setModalEditar(false); 
+        console.log("sending to update", SaleSeleccionado);
+        SaleSeleccionado.date = SaleSeleccionado.date.split("T")[0];
+        fetch("http://localhost:5000/api/sales/"+SaleSeleccionado.id_sale, {
+            method: 'PUT',
+            body: JSON.stringify(SaleSeleccionado),
+            headers:{
+                'Content-Type': 'application/json'
+            }          
+        }).then(res => res.json())
+        .catch(error => console.error('Error:', error))
+        .then(response => {
+            get_sales();        
+            setModalEditar(false); 
+            console.log('Success:', response);                    
+        });                       
     }
     
     const eliminar =()=>{
-        setSales(
-            sales.filter(
-                sale=>sale.id_sale!==SaleSeleccionado.id_sale
-            )
-        );
+          // Se obtiene los datos de la API 
+          fetch("http://localhost:5000/api/sales/"+SaleSeleccionado.id_sale, {
+            method: 'DELETE'
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.code == "ER_ROW_IS_REFERENCED_2") {
+                alert("No es posible eliminar una venta que tiene productos asociadas");
+                get_sales();                
+            } else {
+                alert("Venta eliminada con éxito!");
+                get_sales();
+            }
+            
+        });              
         setModalEliminar(false);
 
       }
@@ -132,14 +135,13 @@ function VentasPage() {
             {/* <NavbarComponent /> */}
             <h1>GESTIÓN DE VENTAS</h1><br />
 
-            <div className="containerInput">
+            <div className="containerInput p-4">
+            <label><b>Buscar:</b></label>
                 <input
-                    className="form-control inputBuscar"
+                    className="form-control inputBuscar mb-3"
                     value={busqueda}
                     placeholder="Búsqueda por Identificación de venta, cliente o nombre del cliente"
-                    onChange={handleChange} />
-                <button className="btn btn-success">Buscar
-                </button>
+                    onChange={handleChange} />            
             </div>
 
             <table className="table">
@@ -147,11 +149,11 @@ function VentasPage() {
                     <tr>
                         <th scope="col">Id Venta</th>
                         <th scope="col">Valor Total</th>
-                        <th scope="col">Id Producto</th>
+                        <th scope="col">Producto</th>
                         <th scope="col">Cantidad</th>
                         <th scope="col">Valor Unitario</th>
                         <th scope="col">Fecha Venta</th>
-                        <th scope="col">Id Cliente</th>
+                        <th scope="col">Cedula Cliente</th>
                         <th scope="col">Nombre Cliente</th>
                         <th scope="col">Vendedor</th>
                         <th scope="col">Acciones</th>
@@ -160,18 +162,27 @@ function VentasPage() {
                 <tbody>
 
                 {
-                    sales.map(item => {
+                    sales
+                    .filter((sale) => {
+                        if (sale.id_sale.toString().toLowerCase().includes(busqueda.toLowerCase())
+                            || sale.id_client.toString().toLowerCase().includes(busqueda.toLowerCase())
+                            || sale.name_client.toString().toLowerCase().includes(busqueda.toLowerCase())
+                        ) {
+                            return sale;
+                        }
+                    })
+                    .map(item => {
                         return (
                             <tr key={item.id_sale}>
                             <td>{ item.id_sale }</td>
                             <td>{ item.total_value }</td>
-                            <td>{ item.id_product }</td>
+                            <td>{ item.product_description }</td>
                             <td>{ item.amount }</td>
                             <td>{ item.unit_price }</td>
-                            <td>{ item.date }</td>
+                            <td>{ item.date.split("T")[0] }</td>
                             <td>{ item.id_client }</td>
                             <td>{ item.name_client }</td>
-                            <td>{ item.seller }</td>
+                            <td>{ item.name_seller }</td>
                             <td><button className="btn btn-primary" onClick={() => seleccionarSale(item, 'Editar')}>Editar</button> {"   "}
                                         <button className="btn btn-danger" onClick={() => seleccionarSale(item, 'Eliminar')}>Eliminar</button></td>
                             </tr>
@@ -210,13 +221,13 @@ function VentasPage() {
                         <br />
 
                         <label>Id producto</label>
-                        <input
-                            className="form-control"
-                            type="text"
-                            name="id_product"
-                            value={SaleSeleccionado && SaleSeleccionado.id_product}
-                            onChange={bChange}
-                        />
+                        <select className="form-select" aria-label="Default select example" name="id_product" id="selectProduct" onChange={bChange} defaultValue={SaleSeleccionado.id_product}>
+                            <option value="0" >Selecciona producto..</option>
+                            {
+                                products.map( product => 
+                                <option value={product.id_product} key={product.id_product}>{product.description}</option> )
+                            }
+                            </select>                        
                         <br />
                         <br />
 
@@ -247,7 +258,7 @@ function VentasPage() {
                             className="form-control"
                             type="date"
                             name="date"
-                            value={SaleSeleccionado && SaleSeleccionado.date}
+                            value={SaleSeleccionado && SaleSeleccionado.date.split("T")[0]}
                             onChange={bChange}
                         />
                         <br />
@@ -276,13 +287,13 @@ function VentasPage() {
                         <br />
 
                         <label>Vendedor</label>
-                        <input
-                            className="form-control"
-                            type="text"
-                            name="seller"
-                            value={SaleSeleccionado && SaleSeleccionado.seller}
-                            onChange={bChange}
-                        />
+                        <select className="form-select" aria-label="Default select example" name="id_seller" onChange={bChange} defaultValue={SaleSeleccionado.id_seller}>
+                            <option value="0" >Selecciona Vendedor..</option>
+                            {
+                                users.map( user => 
+                                <option value={user.id_user} key={user.id_user}>{user.name}</option> )
+                            }
+                            </select>                                   
                         <br />
 
                     </div>

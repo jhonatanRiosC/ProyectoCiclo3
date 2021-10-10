@@ -8,21 +8,8 @@ import { Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
 
 
 function ProductosPage() {
-
-    let products_db = [
-        {
-            id_product: '108',
-            description: 'Capuchino',
-            unit_price: 1000,
-            status: 'Disponible'
-        },
-        {
-            id_product: '102',
-            description: 'Espresso',
-            unit_price: 600,
-            status: 'Disponible'
-        }
-    ]
+    
+    let products_db = [];
 
     const [products, setProducts] = useState([]);
     const [modalEditar, setModalEditar] = useState(false);
@@ -30,8 +17,13 @@ function ProductosPage() {
     const [busqueda, setBusqueda] = useState("");
 
     const get_products = () => {
-        // Se obtiene los datos de la API
-        setProducts(products_db)
+        // Se obtiene los datos de la API 
+        fetch("http://localhost:5000/api/products")
+        .then(res => res.json())
+        .then(data => {
+            products_db = data
+            setProducts(products_db);
+        });
     }
 
     useEffect(() => {
@@ -40,18 +32,6 @@ function ProductosPage() {
 
     const handleChange = e => {
         setBusqueda(e.target.value);
-        filtrar(e.target.value);
-    }
-
-    const filtrar = (terminoBusqueda) => {
-        let resultadosBusqueda = products.filter((producto) => {
-            if (producto.id_product.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
-                || producto.description.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
-            ) {
-                return producto;
-            }
-        });
-        setProducts(resultadosBusqueda);
     }
 
     const [ProductoSeleccionado, setProductoSeleccionado] = useState({
@@ -76,24 +56,39 @@ function ProductosPage() {
     }
 
     const editar = () => {
-        let userNueva = products;
-        userNueva.map(producto => {
-            if (producto.id_product === ProductoSeleccionado.id_product) {
-                producto.description = ProductoSeleccionado.description;
-                producto.unit_price = ProductoSeleccionado.unit_price;
-                producto.status = ProductoSeleccionado.status;
-            }
-        });
-        setProducts(userNueva);
-        setModalEditar(false);
+        console.log("sending to update", ProductoSeleccionado);        
+        fetch("http://localhost:5000/api/products/"+ProductoSeleccionado.id_product, {
+            method: 'PUT',
+            body: JSON.stringify(ProductoSeleccionado),
+            headers:{
+                'Content-Type': 'application/json'
+            }          
+        }).then(res => res.json())
+        .catch(error => console.error('Error:', error))
+        .then(response => {
+            get_products();        
+            setModalEditar(false); 
+            console.log('Success:', response);                    
+        });         
+
     }
 
     const eliminar = () => {
-        setProducts(
-            products.filter(
-                producto => producto.id_product !== ProductoSeleccionado.id_product
-            )
-        );
+        // Se obtiene los datos de la API 
+        fetch("http://localhost:5000/api/products/"+ProductoSeleccionado.id_product, {
+            method: 'DELETE'
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.code == "ER_ROW_IS_REFERENCED_2") {
+                alert("No es posible eliminar un producto que tiene ventas asociadas");
+                get_products();                
+            } else {
+                alert("Producto eliminado con éxito!");
+                get_products();
+            }
+            
+        });        
         setModalEliminar(false);
 
     }
@@ -103,14 +98,13 @@ function ProductosPage() {
             {/* <NavbarComponent /> */}
             <h1>PRODUCTOS REGISTRADOS</h1><br />
 
-            <div className="containerInput">
+            <div className="containerInput p-4">
+                <label><b>Buscar:</b></label>
                 <input
-                    className="form-control inputBuscar"
+                    className="form-control inputBuscar mb-3"
                     value={busqueda}
                     placeholder="Búsqueda por Identificación o Descripción"
                     onChange={handleChange} />
-                <button className="btn btn-success">Buscar
-                </button>
             </div>
 
             <table className="table">
@@ -126,13 +120,21 @@ function ProductosPage() {
                 <tbody>
 
                     {
-                        products.map(item => {
+                        products
+                        .filter((producto) => {
+                            if (producto.id_product.toString().toLowerCase().includes(busqueda.toLowerCase())
+                                || producto.description.toString().toLowerCase().includes(busqueda.toLowerCase())
+                            ) {
+                                return producto;
+                            }
+                        })
+                        .map(item => {
                             return (
                                 <tr key={item.id_product}>
                                     <td>{item.id_product}</td>
                                     <td>{item.description}</td>
                                     <td>{item.unit_price}</td>
-                                    <td>{item.status}</td>
+                                    <td>{item.status ? "Disponible": "No disponible"}</td>
                                     <td><button className="btn btn-primary" onClick={() => seleccionarProducto(item, 'Editar')}>Editar</button> {"   "}
                                         <button className="btn btn-danger" onClick={() => seleccionarProducto(item, 'Eliminar')}>Eliminar</button></td>
                                 </tr>
@@ -183,13 +185,11 @@ function ProductosPage() {
                         <br />
 
                         <label>Estado</label>
-                        <input
-                            className="form-control"
-                            type="text"
-                            name="status"
-                            value={ProductoSeleccionado && ProductoSeleccionado.status}
-                            onChange={bChange}
-                        />
+                        <select className="form-select" aria-label="Default select example"name="status" onChange={bChange} defaultValue={ProductoSeleccionado.status}>
+                            <option value='1'>Disponible</option>
+                            <option value='0'>No disponible</option>
+                        </select>
+
                         <br />
                     </div>
                 </ModalBody>

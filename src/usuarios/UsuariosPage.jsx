@@ -6,57 +6,20 @@ import { Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
 
 function UsuariosPage() {
 
-    let users_db = [
-        {
-            _id: '1',
-            name: 'Jarol Andres Castaño',
-            email: 'jaancastano@utp.edu.co',
-            password: '12345',
-            role: 'Vendedor',
-            status: 'Autorizado'
-        },
-        {
-            _id: '2',
-            name: 'Diana Dorado',
-            email: 'dianadorado25081994@gmail.com',
-            password: '12345',
-            role: 'Vendedor',
-            status: 'Pendiente'
-        },
-        {
-            _id: '3',
-            name: 'Alejandro Lopez',
-            email: 'alopezpe1@gmail.com',
-            password: '12345',
-            role: 'Vendedor',
-            status: 'Autorizado'
-        },
-        {
-            _id: '4',
-            name: 'Laura Posada',
-            email: 'posadalaura57@gmail.com',
-            password: '12345',
-            role: 'Administrador',
-            status: 'Autorizado'
-        },
-        {
-            _id: '5',
-            name: 'Jhonatan Ríos',
-            email: 'jhonatanplac98@outlook.com',
-            password: '12345',
-            role: 'Vendedor',
-            status: 'No autorizado'
-        }
-    ]
+    let users_db = []
 
     const [users, setUsers] = useState([]);
     const [modalEditar, setModalEditar] = useState(false);
     const [modalEliminar, setModalEliminar] = useState(false);
     
 
-    const get_users = () => {
-        // Se obtiene los datos de la API
-        setUsers(users_db)
+    const get_users = () => {        
+        // Se obtiene los datos de la API 
+        fetch("http://localhost:5000/api/users")
+        .then(res => res.json())
+        .then(data => {                
+            setUsers(data);
+        });
     }
 
     useEffect(() => {
@@ -64,7 +27,7 @@ function UsuariosPage() {
     }, [])
 
     const [usuarioSeleccionado, setUsuarioSeleccionado] = useState({
-        _id: '',
+        id_user: '',
         name: '',
         email: '',
         role: '',
@@ -88,7 +51,7 @@ function UsuariosPage() {
     const editar = () => {
         let userNueva = users;
         userNueva.map(usuario => {
-            if (usuario._id === usuarioSeleccionado._id) {
+            if (usuario.id_user === usuarioSeleccionado.id_user) {
                 usuario.name = usuarioSeleccionado.name;
                 usuario.email = usuarioSeleccionado.email;
                 usuario.role = usuarioSeleccionado.role;
@@ -100,11 +63,21 @@ function UsuariosPage() {
     }
 
     const eliminar =()=>{
-        setUsers(
-            users.filter(
-                usuario=>usuario._id!==usuarioSeleccionado._id
-            )
-        );
+          // Se obtiene los datos de la API 
+        fetch("http://localhost:5000/api/users/"+usuarioSeleccionado.id_user, {
+            method: 'DELETE'
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.code == "ER_ROW_IS_REFERENCED_2") {
+                alert("No es posible eliminar un usuario que tiene una venta asociada");
+                get_users();                
+            } else {
+                alert("Usuario eliminado con éxito!");
+                get_users();
+            }
+            
+        });            
         setModalEliminar(false);
 
       }
@@ -128,8 +101,8 @@ function UsuariosPage() {
 
                     {
                         users.map(item => (
-                                <tr key={item._id}>
-                                    <td>{item._id}</td>
+                                <tr key={item.id_user}>
+                                    <td>{item.id_user}</td>
                                     <td>{item.name}</td>
                                     <td>{item.email}</td>
                                     <td>{item.role}</td>
@@ -156,7 +129,7 @@ function UsuariosPage() {
                             readOnly
                             type="text"
                             name="id"
-                            value={usuarioSeleccionado && usuarioSeleccionado._id}
+                            value={usuarioSeleccionado && usuarioSeleccionado.id_user}
                         />
                         <br />
 

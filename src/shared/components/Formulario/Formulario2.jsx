@@ -1,68 +1,73 @@
 import React, { Fragment, useState } from "react";
+import { Redirect } from "react-router";
 import formularioStyle from "./formularioStyle.css"
 
 const Formulario2= () => {
     const [datos, setDatos] = useState({
-        idproducto: '',
-        Cantidad: '',
-        Idusuario: ''
-
+        description: '',
+        unit_price: '',
+        status: ''
     })
 
     const handleInputChange = (event) => {
 
         setDatos({
             ...datos,
-            [event.target.getAttribute("idproducto")]: event.target.value
+            [event.target.getAttribute("name")]: event.target.value
         })
 
     }
 
     const enviarDatos = (event) => {
-        event.prevent.Default();
-        console.log(datos.idproducto + "" + datos.Cantidad)
-
-
+        event.preventDefault();
+        console.log(datos);
+        fetch("http://localhost:5000/api/products", {
+            method: 'POST',
+            body: JSON.stringify(datos),
+            headers:{
+                'Content-Type': 'application/json'
+            }          
+        }).then(res => res.json())
+        .catch(error => console.error('Error:', error))
+        .then(response => {
+            console.log('Success:', response);
+            alert("Producto añadido con éxito!")
+        });
     }
 
+    
 
     return (
         <Fragment>
-            <h1 className="text-center display-1 text-secondary">Registro Producto</h1>
+            <h3 className="text-center display-5 text-secondary">Registro Producto</h3>
+            <hr/>
             <div className="container ">
-                <form className="row" id="row" onSubmit={enviarDatos} classname="form-floating-mb-3">
-                    <div className="col-md-3">
-                        <input placeholder="Descripcion" className="form-control" type="text" name="idventa" onChange={handleInputChange}
+                <form className="row" id="row" onSubmit={enviarDatos} >
+                    <div className="col-md-4">
+                        <input placeholder="Descripción" className="form-control" type="text" name="description" onChange={handleInputChange}
 
 
                         />
-                    </div>
-                    <div className="col-md-3">
-                        <input placeholder="Id Producto" className="form-control" type="text" name="idproducto" onChange={handleInputChange}
-
-
-                        />
-                    </div>
-                    <div className="col-md-3">
-                        <input placeholder="valor unitario" className="form-control" type="text" name="Idusuario" onChange={handleInputChange}
+                    </div>                  
+                    <div className="col-md-4">
+                        <input placeholder="Valor unitario" className="form-control" type="number" name="unit_price" onChange={handleInputChange}
 
 
                         />
 
                     </div>
-                    <div className="col-md-3">
-                        <input placeholder="Estado" className="form-control" type="text" name="Cantidad" onChange={handleInputChange}
-
-
-                        />
+                    <div className="col-md-4">
+                        <select className="form-select" aria-label="Default select example"name="status" onChange={handleInputChange} defaultValue="1">
+                            <option value='1' >Disponible</option>
+                            <option value='0'>No disponible</option>
+                        </select>
+                       
 
                     </div>
 
 
-                </form>
-                <hr/>
-               
-                <hr/>
+                </form>        
+                <hr/>        
                 <form className="row" id="row" onSubmit={enviarDatos} className="form-floating-mb-3">
                     
                         
